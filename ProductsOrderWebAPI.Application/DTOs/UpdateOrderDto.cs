@@ -2,9 +2,9 @@
 
 namespace ProductsOrderWebAPI.Application.DTOs
 {
-    public class UpdateOrderDto(List<Product> products)
+    public class UpdateOrderDto(int id, List<Product> products)
     {
-        public int Id { get; set; }
+        public int Id { get; set; } = id;
         public List<Product> ProductsList { get; set; } = products;
     }
 }

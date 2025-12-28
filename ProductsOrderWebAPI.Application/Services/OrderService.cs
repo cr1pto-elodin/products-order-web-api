@@ -9,20 +9,27 @@ namespace ProductsOrderWebAPI.Application.Services
     public class OrderService(
         IOrderRepository orderRepository,
         IUnityOfWork unityOfWork
-    ) : IOrderService {
+    ) : IOrderService
+    {
         private readonly IOrderRepository _orderRepository = orderRepository;
         private readonly IUnityOfWork _unityOfWork = unityOfWork;
 
-        public async Task<int> AddOrder(CreateOrderDto dto)
+        public async Task<Order> AddOrder(CreateOrderDto dto)
         {
-            var order = new Order
+            if (dto.ProductsList.Count != 0)
             {
-                ProductsList = dto.ProductsList,
-            };
+                var order = new Order
+                {
+                    ProductsList = dto.ProductsList,
+                };
 
-            await _orderRepository.AddOrderAsync( order );
+                await _orderRepository.AddOrderAsync(order);
+                await _unityOfWork.CommitChangesAsync();
 
-            return await _unityOfWork.CommitChangesAsync();
+                return order;
+            }
+
+            throw new OrderWithNoProductsException();
         }
 
         public async Task<Order?> FindById(int id)
@@ -30,7 +37,7 @@ namespace ProductsOrderWebAPI.Application.Services
             return await _orderRepository.FindById(id);
         }
 
-        public async Task<int> UpdateOrder(UpdateOrderDto dto)
+        public async Task<Order> UpdateOrder(UpdateOrderDto dto)
         {
             var order = await _orderRepository.FindById(dto.Id);
 
@@ -39,7 +46,9 @@ namespace ProductsOrderWebAPI.Application.Services
                 order.ProductsList = dto.ProductsList;
                 order.UpdatedAt = DateTime.Now;
 
-                return await _unityOfWork.CommitChangesAsync();
+                await _unityOfWork.CommitChangesAsync();
+                
+                return order; 
             }
 
             throw new OrderNotFoundException(dto.Id);
