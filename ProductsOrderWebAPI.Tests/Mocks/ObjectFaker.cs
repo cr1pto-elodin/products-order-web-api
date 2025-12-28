@@ -1,4 +1,5 @@
 ﻿using Bogus;
+using ProductsOrderWebAPI.Application.DTOs;
 using ProductsOrderWebAPI.Domain.Entities;
 
 namespace ProductsOrderWebAPI.Tests.Mocks
@@ -24,5 +25,25 @@ namespace ProductsOrderWebAPI.Tests.Mocks
         public static List<Product> GenerateProductList(int count) => ProductFaker.Generate(count);
 
         public static Order GenerateOrder() => OrderFaker.Generate();
+        public static CreateOrderDto GenerateCreateOrderDTO(List<Product> products)
+        {
+            var dto = new Faker<CreateOrderDto>("pt_BR")
+                .CustomInstantiator(f => new CreateOrderDto(
+                    products
+                ));
+    
+            return dto;
+        }
+
+        public static UpdateOrderDto GenerateUpdateOrderDTO(int id, List<Product> products)
+        {
+            var dto = new Faker<UpdateOrderDto>("pt_BR")
+                .CustomInstantiator(f => new UpdateOrderDto(
+                    id,
+                    products
+                ));
+    
+            return dto;
+        }
     }
 }
