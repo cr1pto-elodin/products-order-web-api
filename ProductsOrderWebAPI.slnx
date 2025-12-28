@@ -2,4 +2,5 @@
   <Project Path="ProductsOrderWebAPI.Application/ProductsOrderWebAPI.Application.csproj" />
   <Project Path="ProductsOrderWebAPI.Domain/ProductsOrderWebAPI.Domain.csproj" Id="a6d34fe9-5957-429c-a47f-53533227fa33" />
   <Project Path="ProductsOrderWebAPI.Infrastructure/ProductsOrderWebAPI.Infrastructure.csproj" Id="09e5ad43-a815-43b9-b482-4e79bedad6ff" />
+  <Project Path="ProductsOrderWebAPI.Tests/ProductsOrderWebAPI.Tests.csproj" Id="a3fc2bb2-919c-4c69-a017-ae1f9a6d037b" />
 </Solution>
