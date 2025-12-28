@@ -1,0 +1,48 @@
+﻿using ProductsOrderWebAPI.Application.DTOs;
+using ProductsOrderWebAPI.Application.Interfaces;
+using ProductsOrderWebAPI.Domain.Entities;
+using ProductsOrderWebAPI.Domain.Exceptions;
+using ProductsOrderWebAPI.Domain.Interfaces;
+
+namespace ProductsOrderWebAPI.Application.Services
+{
+    public class OrderService(
+        IOrderRepository orderRepository,
+        IUnityOfWork unityOfWork
+    ) : IOrderService {
+        private readonly IOrderRepository _orderRepository = orderRepository;
+        private readonly IUnityOfWork _unityOfWork = unityOfWork;
+
+        public async Task<int> AddOrder(CreateOrderDto dto)
+        {
+            var order = new Order
+            {
+                ProductsList = dto.ProductsList,
+            };
+
+            await _orderRepository.AddOrderAsync( order );
+
+            return await _unityOfWork.CommitChangesAsync();
+        }
+
+        public async Task<Order?> FindById(int id)
+        {
+            return await _orderRepository.FindById(id);
+        }
+
+        public async Task<int> UpdateOrder(UpdateOrderDto dto)
+        {
+            var order = await _orderRepository.FindById(dto.Id);
+
+            if (order != null)
+            {
+                order.ProductsList = dto.ProductsList;
+                order.UpdatedAt = DateTime.Now;
+
+                return await _unityOfWork.CommitChangesAsync();
+            }
+
+            throw new OrderNotFoundException(dto.Id);
+        }
+    }
+}
