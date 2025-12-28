@@ -17,6 +17,11 @@ namespace ProductsOrderWebAPI.Infrastructure.Mappings
                 .IsRequired()
                 .HasPrecision(18,2);
 
+            builder.Property(p => p.Name)
+                .HasColumnName("NOME")
+                .IsRequired()
+                .HasMaxLength(200);
+
             builder.Property(p => p.CreatedAt)
                 .HasColumnName("DATA_CRIACAO")
                 .IsRequired();

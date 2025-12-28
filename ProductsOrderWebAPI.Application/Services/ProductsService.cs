@@ -22,6 +22,7 @@ namespace ProductsOrderWebAPI.Application.Services
         {
             var product = new Product {
                 IdOrder = dto.IdOrder,
+                Name = dto.Name,
                 Price = dto.Price
             };
 
