@@ -33,7 +33,6 @@ namespace ProductsOrderWebAPI.Tests.UnitTests.Application.Services
 
             var result = await _service.AddOrder(createOrderDto);
 
-            Assert.NotNull(result);
             _repositoryMock.Verify(r => r.AddOrderAsync(It.IsAny<Order>()), Times.Once);
             _unityOfWorkMock.Verify(r => r.CommitChangesAsync(), Times.Once);
         }

@@ -51,11 +51,11 @@ namespace ProductsOrderWebAPI.Tests.IntegrationTests.Infrastructure.Repositories
         public async Task UpdateOrderAsync()
         {
             var order = ObjectFaker.GenerateOrder();
-            _context.Order.Add(order);
+            await _context.Order.AddAsync(order);
             await _context.SaveChangesAsync();
 
-            var newTotalPrice = 150.50m;
-            order.TotalPrice = newTotalPrice;
+            var product = ObjectFaker.GenerateProduct();
+            order.ProductsList.Add(product);
 
             await _repository.UpdateOrderAsync(order);
             await _context.SaveChangesAsync();
@@ -63,7 +63,7 @@ namespace ProductsOrderWebAPI.Tests.IntegrationTests.Infrastructure.Repositories
             var updatedOrder = await _context.Order.FindAsync(order.Id);
 
             Assert.NotNull(updatedOrder);
-            Assert.Equal(newTotalPrice, updatedOrder.TotalPrice);
+            Assert.Equal(product, updatedOrder.ProductsList[0]);
         }
     }
 }

@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using FluentAssertions;
 using Moq;
+using ProductsOrderWebAPI.Application.DTOs;
 using ProductsOrderWebAPI.Application.Interfaces;
+using ProductsOrderWebAPI.Application.Mappings;
 using ProductsOrderWebAPI.Application.Services;
 using ProductsOrderWebAPI.Domain.Entities;
 using ProductsOrderWebAPI.Domain.Exceptions;
@@ -36,9 +38,10 @@ namespace ProductsOrderWebAPI.Tests.UnitTests.Application.Services
         public async Task CreateProduct_ShouldCallRepository()
         {
             var createProductDto = ObjectFaker.GenerateCreateProductDTO();
+            var order = ObjectFaker.GenerateOrder();
 
             _orderServiceMock.Setup(s => s.FindById(createProductDto.IdOrder))
-                             .ReturnsAsync((Order?)ObjectFaker.GenerateOrder());
+                             .ReturnsAsync((OrderDto?)order.ToDto());
 
             var result = await _service.AddProduct(createProductDto);
 
@@ -54,7 +57,7 @@ namespace ProductsOrderWebAPI.Tests.UnitTests.Application.Services
             var dto = ObjectFaker.GenerateCreateProductDTO();
 
             _orderServiceMock.Setup(s => s.FindById(dto.IdOrder))
-                             .ReturnsAsync((Order?)null);
+                             .ReturnsAsync((OrderDto?)null);
 
             var action = async () => await _service.AddProduct(dto);
 
