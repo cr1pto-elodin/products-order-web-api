@@ -7,5 +7,6 @@ namespace ProductsOrderWebAPI.Domain.Interfaces
         Task<Product?> FindById(int id);
         Task AddProductAsync(Product product);
         Task UpdateProductAsync(Product product);
+        Task DeleteProductAsync(Product product);
     }
 }
