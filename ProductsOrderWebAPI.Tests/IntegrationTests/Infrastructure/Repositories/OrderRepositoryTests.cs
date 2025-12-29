@@ -36,7 +36,7 @@ namespace ProductsOrderWebAPI.Tests.IntegrationTests.Infrastructure.Repositories
         {
             var order = ObjectFaker.GenerateOrder();
             order.ProductsList = ObjectFaker.GenerateProductList(3);
-            
+
             _context.Order.Add(order);
             await _context.SaveChangesAsync();
 
@@ -64,6 +64,20 @@ namespace ProductsOrderWebAPI.Tests.IntegrationTests.Infrastructure.Repositories
 
             Assert.NotNull(updatedOrder);
             Assert.Equal(product, updatedOrder.ProductsList[0]);
+        }
+
+        [Fact]
+        public async Task DeleteOrder_ShouldRemoveFromDatabase()
+        {
+            var order = ObjectFaker.GenerateOrder();
+            await _context.Order.AddAsync(order);
+            await _context.SaveChangesAsync();
+
+            await _repository.DeleteOrderAsync(order);
+            await _context.SaveChangesAsync();
+
+            var deletedOrder = await _context.Order.FindAsync(order.Id);
+            Assert.Null(deletedOrder);
         }
     }
 }

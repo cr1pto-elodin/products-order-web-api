@@ -69,5 +69,19 @@ namespace ProductsOrderWebAPI.Tests.UnitTests.Application.Services
 
             _unityOfWorkMock.Verify(r => r.CommitChangesAsync(), Times.Never);
         }
+
+        [Fact]
+        public async Task DeleteOrder_ShouldCallRepositoryAndCommit()
+        {
+            var order = ObjectFaker.GenerateOrder();
+            order.Id = 1;
+
+            _repositoryMock.Setup(r => r.FindById(order.Id)).ReturnsAsync(order);
+
+            await _service.DeleteOrder(order.Id);
+
+            _repositoryMock.Verify(r => r.DeleteOrderAsync(order), Times.Once);
+            _unityOfWorkMock.Verify(u => u.CommitChangesAsync(), Times.Once);
+        }
     }
 }

@@ -61,10 +61,8 @@ namespace ProductsOrderWebAPI.Tests.Mocks
         public static UpdateOrderDto GenerateUpdateOrderDTO(int id, List<Product> products)
         {
             var dto = new Faker<UpdateOrderDto>("pt_BR")
-                .CustomInstantiator(f => new UpdateOrderDto(
-                    id,
-                    products
-                ));
+                .RuleFor(o => o.Id, id)
+                .RuleFor(o => o.ProductsList, products);
 
             return dto;
         }
