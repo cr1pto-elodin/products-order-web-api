@@ -8,7 +8,7 @@ namespace ProductsOrderWebAPI.Infrastructure.Mappings
     {
         public void Configure(EntityTypeBuilder<Order> builder)
         {
-            builder.ToTable("Pedido");
+            builder.ToTable("Pedido", tb => tb.HasTrigger("TRG_UpdateOrderTotal"));
 
             builder.HasKey(o => o.Id);
 
