@@ -11,7 +11,8 @@ namespace ProductsOrderWebAPI.Application.Mappings
             {
                 Id = order.Id,
                 TotalPrice = order.TotalPrice,
-                ProductsList = order.ProductsList.Select(p => p.ToDto()).ToList(),
+                ProductsList = order.ProductsList?.Select(p => p.ToDto()).ToList() 
+                       ?? [],
                 CreatedAt = order.CreatedAt,
                 UpdatedAt = order.UpdatedAt,
             };

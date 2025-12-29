@@ -9,5 +9,6 @@ namespace ProductsOrderWebAPI.Domain.Interfaces
         Task AddOrderAsync(Order order);
         Task UpdateOrderAsync(Order order);
         Task DeleteOrderAsync(Order order);
+        Task<IEnumerable<Order>> GetOrdersByFilterAsync(decimal totalPrice);
     }
 }

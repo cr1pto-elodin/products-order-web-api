@@ -8,5 +8,6 @@ namespace ProductsOrderWebAPI.Application.Interfaces
         Task<OrderDto?> FindById(int id);
         Task<OrderDto> UpdateOrder(UpdateOrderDto dto);
         Task DeleteOrder(int id);
+        Task<IEnumerable<OrderDto>> GetOrdersByFilter(decimal totalPrice);
     }
 }

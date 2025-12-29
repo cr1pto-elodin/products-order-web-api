@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 using ProductsOrderWebAPI.Application.DTOs;
 using ProductsOrderWebAPI.Application.Interfaces;
 using ProductsOrderWebAPI.Domain.Exceptions;
@@ -24,7 +25,7 @@ namespace ProductsOrderWebAPI.API.Controllers
             }
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> FindById(int id)
         {
             var order = await orderService.FindById(id);
@@ -52,6 +53,13 @@ namespace ProductsOrderWebAPI.API.Controllers
         {
             await orderService.DeleteOrder(id);
             return NoContent();
+        }
+
+        [HttpGet("filter")]
+        public async Task<ActionResult<IEnumerable<OrderDto>>> Search([FromQuery,Required] decimal totalPrice)
+        {
+            var results = await orderService.GetOrdersByFilter(totalPrice);
+            return Ok(results);
         }
     }
 }

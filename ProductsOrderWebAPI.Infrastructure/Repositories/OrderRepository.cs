@@ -40,5 +40,15 @@ namespace ProductsOrderWebAPI.Infrastructure.Repositories
 
             _context.Order.Remove(order);
         }
+
+        public async Task<IEnumerable<Order>> GetOrdersByFilterAsync(decimal totalPrice)
+        {
+            var orders = await _context.Order
+            .FromSqlRaw("EXEC SP_GetOrdersByTotalPrice @TotalPrice = {0}", totalPrice)
+            .AsNoTracking()
+            .ToListAsync();
+
+            return orders;
+        }
     }
 }

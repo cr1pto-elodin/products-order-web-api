@@ -57,8 +57,8 @@ namespace ProductsOrderWebAPI.Application.Services
                 order.UpdatedAt = DateTime.Now;
 
                 await _unityOfWork.CommitChangesAsync();
-                
-                return order.ToDto(); 
+
+                return order.ToDto();
             }
 
             throw new OrderNotFoundException(dto.Id);
@@ -66,8 +66,8 @@ namespace ProductsOrderWebAPI.Application.Services
         public async Task DeleteOrder(int id)
         {
             var order = await _orderRepository.FindById(id);
-            
-            if(order != null)
+
+            if (order != null)
             {
                 await _orderRepository.DeleteOrderAsync(order);
                 await _unityOfWork.CommitChangesAsync();
@@ -75,6 +75,13 @@ namespace ProductsOrderWebAPI.Application.Services
             }
 
             throw new OrderNotFoundException(id);
+        }
+
+        public async Task<IEnumerable<OrderDto>> GetOrdersByFilter(decimal totalPrice)
+        {
+            var orders = await _orderRepository.GetOrdersByFilterAsync(totalPrice);
+
+            return orders.Select(o => o.ToDto());
         }
     }
 }
