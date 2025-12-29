@@ -18,6 +18,7 @@ namespace ProductsOrderWebAPI.Tests.Mocks
             new Faker<Order>("pt_BR")
                 .RuleFor(o => o.Id, f => 0)
                 .RuleFor(o => o.TotalPrice, 0)
+                .RuleFor(o => o.ProductsList, [])
                 .RuleFor(o => o.CreatedAt, f => DateTime.Now)
                 .RuleFor(p => p.UpdatedAt, f => DateTime.Now);
 
