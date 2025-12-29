@@ -21,8 +21,30 @@ namespace ProductsOrderWebAPI.Tests.Mocks
                 .RuleFor(o => o.CreatedAt, f => DateTime.Now)
                 .RuleFor(p => p.UpdatedAt, f => DateTime.Now);
 
+        public static Faker<CreateProductDto> CreateProductDtoFaker =>
+            new Faker<CreateProductDto>("pt_BR")
+                .RuleFor(p => p.Name, f => f.Commerce.ProductName())
+                .RuleFor(p => p.Price, f => f.Finance.Amount(10, 5000));
+
         public static Product GenerateProduct() => ProductFaker.Generate();
         public static List<Product> GenerateProductList(int count) => ProductFaker.Generate(count);
+        public static CreateProductDto GenerateCreateProductDTO()
+        {
+            var dto = new Faker<CreateProductDto>("pt_BR")
+                .CustomInstantiator(f => new CreateProductDto(
+                    f.IndexFaker + 1,
+                    f.Commerce.ProductName(),
+                    f.Finance.Amount(10,5000)
+                ));
+
+            return dto;
+        }
+
+        public static UpdateProductDto GenerateUpdateProductDTO =>
+            new Faker<UpdateProductDto>("pt_BR")
+                .RuleFor(p => p.Id, f => f.IndexFaker + 1)
+                .RuleFor(p => p.Price, f => f.Finance.Amount(10,5000));
+
 
         public static Order GenerateOrder() => OrderFaker.Generate();
         public static CreateOrderDto GenerateCreateOrderDTO(List<Product> products)
@@ -31,7 +53,7 @@ namespace ProductsOrderWebAPI.Tests.Mocks
                 .CustomInstantiator(f => new CreateOrderDto(
                     products
                 ));
-    
+
             return dto;
         }
 
@@ -42,7 +64,7 @@ namespace ProductsOrderWebAPI.Tests.Mocks
                     id,
                     products
                 ));
-    
+
             return dto;
         }
     }

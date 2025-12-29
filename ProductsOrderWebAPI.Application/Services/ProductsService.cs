@@ -7,31 +7,44 @@ using ProductsOrderWebAPI.Domain.Interfaces;
 namespace ProductsOrderWebAPI.Application.Services
 {
     public class ProductsService(
+        IOrderService orderService,
         IProductsRepository productsRepository,
         IUnityOfWork unityOfWork
-    ) : IProductsService {
+    ) : IProductsService
+    {
         private readonly IProductsRepository _productsRepository = productsRepository;
+        private readonly IOrderService _orderService = orderService;
         private readonly IUnityOfWork _unityOfWork = unityOfWork;
 
         public async Task<Product?> FindById(int id)
         {
-            return await this._productsRepository.FindById(id);
+            return await _productsRepository.FindById(id);
         }
 
-        public async Task<int> AddProduct(CreateProductDto dto)
+        public async Task<Product> AddProduct(CreateProductDto dto)
         {
-            var product = new Product {
-                IdOrder = dto.IdOrder,
-                Name = dto.Name,
-                Price = dto.Price
-            };
+            var order = await _orderService.FindById(dto.IdOrder);
 
-            await this._productsRepository.AddProductAsync(product);
+            if (order != null)
+            {
+                var product = new Product
+                {
+                    IdOrder = dto.IdOrder,
+                    Name = dto.Name,
+                    Price = dto.Price
+                };
 
-            return await _unityOfWork.CommitChangesAsync();
+                await _productsRepository.AddProductAsync(product);
+
+                await _unityOfWork.CommitChangesAsync();
+
+                return product;
+            }
+
+            throw new OrderNotFoundException(dto.IdOrder);
         }
 
-        public async Task<int> UpdateProduct(UpdateProductDto dto)
+        public async Task<Product> UpdateProduct(UpdateProductDto dto)
         {
             var product = await _productsRepository.FindById(dto.Id);
 
@@ -40,7 +53,9 @@ namespace ProductsOrderWebAPI.Application.Services
                 product.Price = dto.Price;
                 product.UpdatedAt = DateTime.Now;
 
-                return await _unityOfWork.CommitChangesAsync();
+                await _unityOfWork.CommitChangesAsync();
+
+                return product;
             }
 
             throw new ProductNotFoundException(dto.Id);
