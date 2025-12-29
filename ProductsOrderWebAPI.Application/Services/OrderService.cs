@@ -47,7 +47,13 @@ namespace ProductsOrderWebAPI.Application.Services
 
             if (order != null)
             {
-                order.ProductsList = dto.ProductsList;
+                order.ProductsList.Clear();
+
+                foreach (var product in dto.ProductsList)
+                {
+                    order.ProductsList.Add(product);
+                }
+
                 order.UpdatedAt = DateTime.Now;
 
                 await _unityOfWork.CommitChangesAsync();
