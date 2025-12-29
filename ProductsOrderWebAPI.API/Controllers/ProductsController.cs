@@ -7,14 +7,14 @@ namespace ProductsOrderWebAPI.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ProductsController(IProductsService orderService) : ControllerBase
+    public class ProductsController(IProductsService productService) : ControllerBase
     {
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateProductDto dto)
         {
             try
             {
-                var result = await orderService.AddProduct(dto);
+                var result = await productService.AddProduct(dto);
                 
                 return CreatedAtAction(nameof(FindById), new { id = result.Id }, result);
             }
@@ -27,7 +27,7 @@ namespace ProductsOrderWebAPI.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> FindById(int id)
         {
-            var product = await orderService.FindById(id);
+            var product = await productService.FindById(id);
             if (product == null) return NotFound();
 
             return Ok(product);
@@ -38,13 +38,20 @@ namespace ProductsOrderWebAPI.API.Controllers
         {
             try
             {
-                await orderService.UpdateProduct(dto);
+                await productService.UpdateProduct(dto);
                 return NoContent();
             }
             catch (OrderNotFoundException)
             {
                 return NotFound();
             }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await productService.DeleteProduct(id);
+            return NoContent();
         }
     }
 }
