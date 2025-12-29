@@ -85,7 +85,7 @@ namespace ProductsOrderWebAPI.Tests.UnitTests.Application.Services
         }
 
         [Fact]
-        public async Task DeleteOrder_ShouldCallRepositoryAndCommit()
+        public async Task DeleteProduct_ShouldCallRepositoryAndCommit()
         {
             var product = ObjectFaker.GenerateProduct();
             product.Id = 1;
