@@ -15,6 +15,7 @@ namespace ProductsOrderWebAPI.Infrastructure.Mappings
             builder.Property(o => o.TotalPrice)
                 .HasColumnName("VALOR_TOTAL")
                 .IsRequired()
+                .ValueGeneratedOnAddOrUpdate()
                 .HasPrecision(18, 2);
 
             builder.Property(o => o.CreatedAt)
