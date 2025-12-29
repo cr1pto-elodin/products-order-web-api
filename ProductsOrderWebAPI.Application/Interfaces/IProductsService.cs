@@ -5,8 +5,8 @@ namespace ProductsOrderWebAPI.Application.Interfaces
 {
     public interface IProductsService
     {
-        Task<Product?> FindById(int id);
-        Task<Product> AddProduct(CreateProductDto dto);
-        Task<Product> UpdateProduct(UpdateProductDto dto);
+        Task<ProductDto?> FindById(int id);
+        Task<ProductDto> AddProduct(CreateProductDto dto);
+        Task<ProductDto> UpdateProduct(UpdateProductDto dto);
     }
 }

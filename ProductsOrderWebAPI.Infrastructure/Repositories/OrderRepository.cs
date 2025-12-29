@@ -18,6 +18,7 @@ namespace ProductsOrderWebAPI.Infrastructure.Repositories
         public async Task<Order?> FindById(int id)
         {
             return await _context.Order
+                .AsNoTracking()
                 .Include(order => order.ProductsList)
                 .FirstOrDefaultAsync(order => order.Id == id);
         }

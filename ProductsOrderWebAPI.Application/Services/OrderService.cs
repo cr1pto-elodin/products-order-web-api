@@ -1,5 +1,6 @@
 ﻿using ProductsOrderWebAPI.Application.DTOs;
 using ProductsOrderWebAPI.Application.Interfaces;
+using ProductsOrderWebAPI.Application.Mappings;
 using ProductsOrderWebAPI.Domain.Entities;
 using ProductsOrderWebAPI.Domain.Exceptions;
 using ProductsOrderWebAPI.Domain.Interfaces;
@@ -14,7 +15,7 @@ namespace ProductsOrderWebAPI.Application.Services
         private readonly IOrderRepository _orderRepository = orderRepository;
         private readonly IUnityOfWork _unityOfWork = unityOfWork;
 
-        public async Task<Order> AddOrder(CreateOrderDto dto)
+        public async Task<OrderDto> AddOrder(CreateOrderDto dto)
         {
             if (dto.ProductsList.Count != 0)
             {
@@ -26,18 +27,21 @@ namespace ProductsOrderWebAPI.Application.Services
                 await _orderRepository.AddOrderAsync(order);
                 await _unityOfWork.CommitChangesAsync();
 
-                return order;
+                var orderWithTotalValue = await FindById(order.Id);
+
+                return orderWithTotalValue!;
             }
 
             throw new OrderWithNoProductsException();
         }
 
-        public async Task<Order?> FindById(int id)
+        public async Task<OrderDto?> FindById(int id)
         {
-            return await _orderRepository.FindById(id);
+            var order = await _orderRepository.FindById(id);
+            return order?.ToDto();
         }
 
-        public async Task<Order> UpdateOrder(UpdateOrderDto dto)
+        public async Task<OrderDto> UpdateOrder(UpdateOrderDto dto)
         {
             var order = await _orderRepository.FindById(dto.Id);
 
@@ -48,7 +52,7 @@ namespace ProductsOrderWebAPI.Application.Services
 
                 await _unityOfWork.CommitChangesAsync();
                 
-                return order; 
+                return order.ToDto(); 
             }
 
             throw new OrderNotFoundException(dto.Id);

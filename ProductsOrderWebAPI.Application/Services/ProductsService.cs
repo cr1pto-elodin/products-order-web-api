@@ -1,5 +1,6 @@
 ﻿using ProductsOrderWebAPI.Application.DTOs;
 using ProductsOrderWebAPI.Application.Interfaces;
+using ProductsOrderWebAPI.Application.Mappings;
 using ProductsOrderWebAPI.Domain.Entities;
 using ProductsOrderWebAPI.Domain.Exceptions;
 using ProductsOrderWebAPI.Domain.Interfaces;
@@ -16,12 +17,13 @@ namespace ProductsOrderWebAPI.Application.Services
         private readonly IOrderService _orderService = orderService;
         private readonly IUnityOfWork _unityOfWork = unityOfWork;
 
-        public async Task<Product?> FindById(int id)
+        public async Task<ProductDto?> FindById(int id)
         {
-            return await _productsRepository.FindById(id);
+            var product = await _productsRepository.FindById(id);
+            return product?.ToDto();
         }
 
-        public async Task<Product> AddProduct(CreateProductDto dto)
+        public async Task<ProductDto> AddProduct(CreateProductDto dto)
         {
             var order = await _orderService.FindById(dto.IdOrder);
 
@@ -38,13 +40,13 @@ namespace ProductsOrderWebAPI.Application.Services
 
                 await _unityOfWork.CommitChangesAsync();
 
-                return product;
+                return product.ToDto();
             }
 
             throw new OrderNotFoundException(dto.IdOrder);
         }
 
-        public async Task<Product> UpdateProduct(UpdateProductDto dto)
+        public async Task<ProductDto> UpdateProduct(UpdateProductDto dto)
         {
             var product = await _productsRepository.FindById(dto.Id);
 
@@ -55,7 +57,7 @@ namespace ProductsOrderWebAPI.Application.Services
 
                 await _unityOfWork.CommitChangesAsync();
 
-                return product;
+                return product.ToDto();
             }
 
             throw new ProductNotFoundException(dto.Id);
