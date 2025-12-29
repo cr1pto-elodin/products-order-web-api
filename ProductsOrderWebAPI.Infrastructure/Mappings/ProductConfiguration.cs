@@ -12,6 +12,10 @@ namespace ProductsOrderWebAPI.Infrastructure.Mappings
 
             builder.HasKey(p => p.Id);
 
+            builder.Property(p => p.IdOrder)
+                .HasColumnName("ID_PEDIDO")
+                .IsRequired();
+
             builder.Property(p => p.Price)
                 .HasColumnName("PRECO")
                 .IsRequired()
