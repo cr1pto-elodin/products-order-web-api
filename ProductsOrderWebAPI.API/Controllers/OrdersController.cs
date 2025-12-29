@@ -15,7 +15,7 @@ namespace ProductsOrderWebAPI.API.Controllers
             try
             {
                 var result = await orderService.AddOrder(dto);
-                
+
                 return CreatedAtAction(nameof(FindById), new { id = result.Id }, result);
             }
             catch (Exception ex)
@@ -45,6 +45,13 @@ namespace ProductsOrderWebAPI.API.Controllers
             {
                 return NotFound();
             }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await orderService.DeleteOrder(id);
+            return NoContent();
         }
     }
 }

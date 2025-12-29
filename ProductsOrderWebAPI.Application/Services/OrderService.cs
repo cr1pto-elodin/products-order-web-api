@@ -43,7 +43,7 @@ namespace ProductsOrderWebAPI.Application.Services
 
         public async Task<OrderDto> UpdateOrder(UpdateOrderDto dto)
         {
-            var order = await _orderRepository.FindById(dto.Id);
+            var order = await _orderRepository.FindByIdForUpdateAsync(dto.Id);
 
             if (order != null)
             {
@@ -62,6 +62,19 @@ namespace ProductsOrderWebAPI.Application.Services
             }
 
             throw new OrderNotFoundException(dto.Id);
+        }
+        public async Task DeleteOrder(int id)
+        {
+            var order = await _orderRepository.FindById(id);
+            
+            if(order != null)
+            {
+                await _orderRepository.DeleteOrderAsync(order);
+                await _unityOfWork.CommitChangesAsync();
+                return;
+            }
+
+            throw new OrderNotFoundException(id);
         }
     }
 }

@@ -23,9 +23,22 @@ namespace ProductsOrderWebAPI.Infrastructure.Repositories
                 .FirstOrDefaultAsync(order => order.Id == id);
         }
 
+        public async Task<Order?> FindByIdForUpdateAsync(int id)
+        {
+            return await _context.Order
+                .Include(o => o.ProductsList)
+                .FirstOrDefaultAsync(o => o.Id == id);
+        }
+
         public async Task UpdateOrderAsync(Order order)
         {
             _context.Order.Update(order);
+        }
+
+        public async Task DeleteOrderAsync(Order order)
+        {
+
+            _context.Order.Remove(order);
         }
     }
 }
