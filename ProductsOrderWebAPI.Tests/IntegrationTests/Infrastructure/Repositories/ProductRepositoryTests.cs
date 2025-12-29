@@ -7,7 +7,7 @@ namespace ProductsOrderWebAPI.Tests.IntegrationTests.Infrastructure.Repositories
     public class ProductRepositoryTests : BaseTest
     {
         private readonly ProductsRepository _productsRepository;
-        private readonly int _idOrder; 
+        private readonly int _idOrder;
 
         public ProductRepositoryTests()
         {
@@ -15,7 +15,7 @@ namespace ProductsOrderWebAPI.Tests.IntegrationTests.Infrastructure.Repositories
 
             var order = ObjectFaker.GenerateOrder();
             order.ProductsList = ObjectFaker.GenerateProductList(1);
-            
+
             _context.Order.Add(order);
             _context.SaveChanges();
 
@@ -42,7 +42,7 @@ namespace ProductsOrderWebAPI.Tests.IntegrationTests.Infrastructure.Repositories
         {
             var product = ObjectFaker.GenerateProduct();
             product.IdOrder = _idOrder;
-            
+
             await _productsRepository.AddProductAsync(product);
             await _context.SaveChangesAsync();
 
@@ -71,6 +71,22 @@ namespace ProductsOrderWebAPI.Tests.IntegrationTests.Infrastructure.Repositories
 
             Assert.NotNull(updatedProduct);
             Assert.Equal(newPrice, updatedProduct.Price);
+        }
+
+        [Fact]
+        public async Task DeleteOrder_ShouldRemoveFromDatabase()
+        {
+            var product = ObjectFaker.GenerateProduct();
+            product.IdOrder = _idOrder;
+            
+            await _context.Products.AddAsync(product);
+            await _context.SaveChangesAsync();
+
+            await _productsRepository.DeleteProductAsync(product);
+            await _context.SaveChangesAsync();
+
+            var deletedProduct = await _context.Products.FindAsync(product.Id);
+            Assert.Null(deletedProduct);
         }
     }
 }
