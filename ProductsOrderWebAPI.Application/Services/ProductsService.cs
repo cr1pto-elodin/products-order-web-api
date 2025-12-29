@@ -62,5 +62,19 @@ namespace ProductsOrderWebAPI.Application.Services
 
             throw new ProductNotFoundException(dto.Id);
         }
+
+        public async Task DeleteProduct(int id)
+        {
+            var product = await _productsRepository.FindById(id);
+            
+            if(product != null)
+            {
+                await _productsRepository.DeleteProductAsync(product);
+                await _unityOfWork.CommitChangesAsync();
+                return;
+            }
+
+            throw new ProductNotFoundException(id);
+        }
     }
 }

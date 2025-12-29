@@ -8,5 +8,6 @@ namespace ProductsOrderWebAPI.Application.Interfaces
         Task<ProductDto?> FindById(int id);
         Task<ProductDto> AddProduct(CreateProductDto dto);
         Task<ProductDto> UpdateProduct(UpdateProductDto dto);
+        Task DeleteProduct(int id);
     }
 }
