@@ -16,7 +16,8 @@ namespace ProductsOrderWebAPI.Infrastructure.Mappings
                 .HasColumnName("VALOR_TOTAL")
                 .IsRequired()
                 .ValueGeneratedOnAddOrUpdate()
-                .HasPrecision(18, 2);
+                .HasPrecision(18, 2)
+                .HasDefaultValue(0);
 
             builder.Property(o => o.CreatedAt)
                 .HasColumnName("DATA_CRIACAO")
